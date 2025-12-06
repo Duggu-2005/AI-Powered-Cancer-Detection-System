@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Detection – AI Screening</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Simple CSS Reset + Styling -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(120deg, #0f172a, #1e293b, #4c1d95);
+            background-size: 300% 300%;
+            animation: gradientMove 12s ease infinite;
+            color: #f9fafb;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+            gap: 2rem;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .headline {
+            padding: 20px;
+        }
+
+        .headline h1 {
+            font-size: clamp(2.4rem, 4vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+
+        .headline span.highlight {
+            background: linear-gradient(135deg, #f97316, #ec4899, #4ade80);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .headline p.subtext {
+            font-size: 0.95rem;
+            color: #cbd5f5;
+            max-width: 440px;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 16px;
+            padding: 0.9rem 1rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.7);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
+            border-color: rgba(248, 250, 252, 0.6);
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-card p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .form-card {
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent),
+                        radial-gradient(circle at bottom right, rgba(244, 114, 182, 0.25), transparent),
+                        rgba(15, 23, 42, 0.85);
+            border-radius: 24px;
+            padding: 1.8rem 1.6rem;
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.55), transparent);
+            top: -90px;
+            right: -80px;
+            opacity: 0.8;
+        }
+
+        .form-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .form-card p {
+            font-size: 0.85rem;
+            color: #e5e7eb;
+            margin-bottom: 1.2rem;
+        }
+
+        .input-label {
+            font-size: 0.82rem;
+            margin-bottom: 0.3rem;
+            display: block;
+            color: #e5e7eb;
+        }
+
+        .input-helper {
+            font-size: 0.72rem;
+            color: #9ca3af;
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .input-box {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.7rem 0.6rem;
+            color: #e5e7eb;
+            font-size: 0.8rem;
+            resize: vertical;
+            min-height: 60px;
+            outline: none;
+            transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .input-box:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.7);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .button-row {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            position: relative;
+            border: none;
+            border-radius: 999px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #0f172a;
+            background: linear-gradient(135deg, #f97316, #ec4899, #a855f7);
+            box-shadow: 0 12px 30px rgba(236, 72, 153, 0.6);
+            overflow: hidden;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.6), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 16px 38px rgba(236, 72, 153, 0.8);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-secondary {
+            font-size: 0.75rem;
+            color: #bfdbfe;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .result-badge {
+            margin-top: 1.2rem;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.8);
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-icon {
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            font-size: 0.8rem;
+        }
+
+          .result-badge.cancerous {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: rgba(248, 113, 113, 0.7);
+            color: #ffe4e6;        /* ⭐ FIXED */
+        }
+
+        .result-badge.cancerous .result-icon {
+            background: #b91c1c;
+        }
+
+        .result-badge.safe {
+            background: rgba(22, 163, 74, 0.25);
+            border-color: rgba(52, 211, 153, 0.7);
+            color: #bbf7d0;
+        }
+
+        .result-badge.safe .result-icon {
+            background: #15803d;
+        }
+
+        .footer-note {
+            margin-top: 1rem;
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="hero">
+        <!-- Left: Headline & Info -->
+        <section class="headline">
+            <h1>
+                AI-Powered <span class="highlight">Cancer Detection</span> Interface
+            </h1>
+            <p class="subtext">
+                Enter your extracted diagnostic feature values to instantly screen for potential malignancy.
+                This tool is built on a logistic regression model trained on breast cancer clinical data.
+            </p>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h3>Real-time Result</h3>
+                    <p>Prediction in milliseconds for smooth clinical workflows.</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Standardized Input</h3>
+                    <p>Works with 30 numeric features from the Wisconsin dataset format.</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Local & Private</h3>
+                    <p>Runs on your machine – no data leaves your environment.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Form Card -->
+        <section class="form-card">
+            <h2>Run a Screening</h2>
+            <p>Paste the 30 comma-separated feature values for a single patient sample.</p>
+
+            <form action="{% url 'predict' %}" method="post">
+                {% csrf_token %}
+                <label for="input" class="input-label">Diagnostic Features (30 values)</label>
+                <span class="input-helper">
+                    Example: 17.99,10.38,122.8,1001.0,0.1184,0.2776,0.3001,0.1471,0.2419,0.07871,...
+                </span>
+                <textarea
+                    id="input"
+                    name="input"
+                    class="input-box"
+                    placeholder="Enter 30 comma-separated values in the exact order your model expects."
+                >{% if request.POST.input %}{{ request.POST.input }}{% endif %}</textarea>
+
+                <div class="button-row">
+                    <button type="submit" class="btn-primary">
+                        Predict Now
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="fillSample('benign')">
+                        Use Benign Sample
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="fillSample('malignant')">
+                        Use Malignant Sample
+                    </button>
+                </div>
+            </form>
+
+            {% if message %}
+                <div
+                    id="resultBadge"
+                    class="result-badge {% if message == 'cancerous' %}cancerous{% else %}safe{% endif %}"
+                >
+                    <span class="result-icon">
+                        {% if message == "cancerous" %}
+                            ❗
+                        {% else %}
+                            ✅
+                        {% endif %}
+                    </span>
+                    {% if message == "cancerous" %}
+                        Model prediction: <strong>Likely Malignant (Cancerous)</strong>
+                    {% else %}
+                        Model prediction: <strong>Likely Benign (Not Cancerous)</strong>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <p class="footer-note">
+                This interface is for educational & experimental use only and is not a substitute for professional medical diagnosis.
+            </p>
+        </section>
+    </div>
+</div>
+
+<!-- GSAP for animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+        integrity="sha512-Nx3z5kYzqOZ8FZ+53OJlUZuqZcWHRgI5h6TxqyN1C4E3u9jN2O4Jt+3LOfcNxqFIRoFqK4/O9W3XMtCfKc0w1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    // Page entrance animations
+    gsap.from(".headline h1", {
+        y: 40,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out"
+    });
+
+    gsap.from(".headline .subtext", {
+        y: 20,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.2,
+        ease: "power3.out"
+    });
+
+    gsap.from(".stat-card", {
+        y: 30,
+        opacity: 0,
+        duration: 0.7,
+        delay: 0.4,
+        stagger: 0.12,
+        ease: "power3.out"
+    });
+
+    gsap.from(".form-card", {
+        x: 60,
+        opacity: 0,
+        duration: 0.9,
+        delay: 0.3,
+        ease: "power3.out"
+    });
+
+    // Animate result badge if present
+    const badge = document.getElementById("resultBadge");
+    if (badge) {
+        gsap.to(badge, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            delay: 0.2,
+            ease: "back.out(1.7)"
+        });
+        gsap.fromTo(badge, { boxShadow: "0 0 0 rgba(0,0,0,0)" }, {
+            boxShadow: "0 0 35px rgba(251, 113, 133, 0.55)",
+            duration: 1.4,
+            repeat: 1,
+            yoyo: true
+        });
+    }
+
+    // Helper: fill sample input for quick testing
+    function fillSample(type) {
+        const benign = "12.05,14.63,78.04,449.3,0.1031,0.09092,0.06592,0.02749,0.1675,0.05913,0.1786,1.819,1.955,13.99,0.00443,0.01421,0.01502,0.00645,0.01994,0.001875,13.30,20.37,84.48,546.1,0.1341,0.1751,0.1381,0.05314,0.2934,0.0934";
+        const malignant = "17.99,10.38,122.80,1001.0,0.1184,0.2776,0.3001,0.1471,0.2419,0.07871,1.095,0.9053,8.589,153.4,0.006399,0.04904,0.05373,0.01587,0.03003,0.006193,25.38,17.33,184.6,2019.0,0.1622,0.6656,0.7119,0.2654,0.4601,0.1189";
+
+        const textarea = document.getElementById("input");
+        textarea.value = (type === "benign") ? benign : malignant;
+
+        gsap.fromTo(textarea, { borderColor: "#38bdf8" }, {
+            borderColor: "#f97316",
+            duration: 0.6,
+            yoyo: true,
+            repeat: 1
+        });
+    }
+</script>
+
+</body>
+</html>
