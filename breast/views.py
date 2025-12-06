@@ -2,8 +2,8 @@ from django.shortcuts import render
 import pickle
 import numpy as np
 
-model = pickle.load(open(r'C:\Users\Hp\Desktop\ml\model.pkl','rb'))
-scaler = pickle.load(open(r'C:\Users\Hp\Desktop\ml\sc.pkl','rb'))
+model = pickle.load(open(r'C:\Users\Hp\Desktop\render\breast\model.pkl','rb'))
+scaler = pickle.load(open(r'C:\Users\Hp\Desktop\render\breast\sc.pkl','rb'))
 def first(request):
     return render(request,'index.html')
 
