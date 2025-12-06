@@ -1,9 +1,15 @@
 from django.shortcuts import render
 import pickle
 import numpy as np
+import os
 
-model = pickle.load(open(r'C:\Users\Hp\Desktop\ml\model.pkl','rb'))
-scaler = pickle.load(open(r'C:\Users\Hp\Desktop\ml\sc.pkl','rb'))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, "model.pkl")
+model = pickle.load(open(model_path, "rb"))
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, "sc.pkl")
+scaler = pickle.load(open(model_path, "rb"))
 def first(request):
     return render(request,'index.html')
 
