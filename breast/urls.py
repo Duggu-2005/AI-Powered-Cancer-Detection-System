@@ -19,6 +19,6 @@ from django.urls import path
 from breast import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/',views.first), 
+    path('/',views.first), 
     path('predict/',views.predict,name='predict')
 ]
